@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1752156255331" clover="3.2.0">
+  <project timestamp="1752156255332" name="All files">
+    <metrics statements="47" coveredstatements="8" conditionals="16" coveredconditionals="6" methods="17" coveredmethods="6" elements="80" coveredelements="20" complexity="0" loc="47" ncloc="47" packages="4" files="7" classes="7"/>
+    <package name="src">
+      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="index.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/index.tsx">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.app">
+      <metrics statements="4" coveredstatements="2" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
+      <file name="App.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/app/App.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="10" count="8" type="stmt"/>
+      </file>
+      <file name="index.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/app/index.tsx">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.app.components">
+      <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <file name="Layout.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/app/components/Layout.tsx">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="10" count="13" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.app.pages">
+      <metrics statements="37" coveredstatements="2" conditionals="10" coveredconditionals="0" methods="12" coveredmethods="1"/>
+      <file name="CadastroPessoa.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/app/pages/CadastroPessoa.tsx">
+        <metrics statements="22" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+      </file>
+      <file name="DownloadCsv.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/app/pages/DownloadCsv.tsx">
+        <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="9" count="2" type="stmt"/>
+      </file>
+      <file name="ListagemPessoas.tsx" path="/home/estevan/Documents/workspace/emiteai_project_complete/frontend/src/app/pages/ListagemPessoas.tsx">
+        <metrics statements="12" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="6" coveredmethods="0"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="17" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="18" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
