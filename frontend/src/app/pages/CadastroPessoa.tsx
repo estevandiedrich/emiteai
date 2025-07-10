@@ -208,10 +208,7 @@ export default function CadastroPessoa() {
     } catch (err: any) {
       console.error('Erro ao salvar pessoa:', err);
       
-      // Verificar se é erro de CPF duplicado
-      if (err.response?.data?.message?.includes('CPF já cadastrado')) {
-        setError("Este CPF já está cadastrado no sistema");
-      } else if (err.response?.data?.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError(isEditing ? "Erro ao atualizar pessoa" : "Erro ao salvar pessoa");
