@@ -46,13 +46,43 @@ export default function CadastroPessoa() {
     return cleanCep.length === 8;
   };
 
+  // Função para formatar CPF (000.000.000-00)
+  const formatCpf = (cpf: string) => {
+    return cpf
+      .replace(/\D/g, '') // Remove tudo que não é dígito
+      .replace(/(\d{3})(\d)/, '$1.$2') // Coloca um ponto entre o terceiro e quarto dígitos
+      .replace(/(\d{3})(\d)/, '$1.$2') // Coloca um ponto entre o terceiro e quarto dígitos
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Coloca um hífen entre o terceiro e quarto dígitos
+  };
+
+  // Função para formatar telefone (00) 0000-0000 ou (00) 00000-0000
+  const formatTelefone = (telefone: string) => {
+    const numbers = telefone.replace(/\D/g, '');
+    
+    if (numbers.length <= 2) {
+      return numbers;
+    } else if (numbers.length <= 6) {
+      return numbers.replace(/(\d{2})(\d+)/, '($1) $2');
+    } else if (numbers.length <= 10) {
+      return numbers.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+    } else {
+      return numbers.replace(/(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
-    // Se for o campo CEP, aplica formatação
+    // Aplicar formatação baseada no campo
     if (name === 'cep') {
       const formattedCep = value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2');
       setForm({ ...form, [name]: formattedCep });
+    } else if (name === 'cpf') {
+      const formattedCpf = formatCpf(value);
+      setForm({ ...form, [name]: formattedCpf });
+    } else if (name === 'telefone') {
+      const formattedTelefone = formatTelefone(value);
+      setForm({ ...form, [name]: formattedTelefone });
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -107,8 +137,8 @@ export default function CadastroPessoa() {
       // Preencher o formulário com os dados da pessoa
       setForm({
         nome: pessoa.nome || '',
-        telefone: pessoa.telefone || '',
-        cpf: pessoa.cpf || '',
+        telefone: pessoa.telefone ? formatTelefone(pessoa.telefone) : '',
+        cpf: pessoa.cpf ? formatCpf(pessoa.cpf) : '',
         cep: pessoa.endereco?.cep ? pessoa.endereco.cep.replace(/(\d{5})(\d)/, '$1-$2') : '',
         numero: pessoa.endereco?.numero || '',
         complemento: pessoa.endereco?.complemento || ''
@@ -135,7 +165,7 @@ export default function CadastroPessoa() {
     if (isEditing && id) {
       loadPessoa(id);
     }
-  }, [isEditing, id]);
+  }, [isEditing, id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -145,8 +175,8 @@ export default function CadastroPessoa() {
     try {
       const pessoaData = {
         nome: form.nome,
-        telefone: form.telefone,
-        cpf: form.cpf,
+        telefone: form.telefone.replace(/\D/g, ''), // Remove formatação do telefone
+        cpf: form.cpf.replace(/\D/g, ''), // Remove formatação do CPF
         endereco: {
           cep: formatCep(form.cep),
           numero: form.numero,
@@ -217,7 +247,9 @@ export default function CadastroPessoa() {
           label="Telefone" 
           value={form.telefone} 
           onChange={handleChange} 
-          fullWidth 
+          fullWidth
+          placeholder="(00) 0000-0000 ou (00) 00000-0000"
+          helperText="Telefone fixo ou celular"
         />
         
         <TextField 
@@ -227,6 +259,8 @@ export default function CadastroPessoa() {
           onChange={handleChange} 
           fullWidth 
           required
+          placeholder="000.000.000-00"
+          helperText="Formato: 000.000.000-00"
         />
         
         <Box position="relative">

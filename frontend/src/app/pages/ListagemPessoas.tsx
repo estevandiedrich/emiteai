@@ -68,7 +68,7 @@ export default function ListagemPessoas() {
 
   useEffect(() => {
     loadPessoas();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = (pessoa: Pessoa) => {
     // Navegar para a página de cadastro com o ID da pessoa para edição
@@ -112,6 +112,21 @@ export default function ListagemPessoas() {
 
   const formatCep = (cep: string) => {
     return cep.replace(/(\d{5})(\d)/, '$1-$2');
+  };
+
+  const formatCpf = (cpf: string) => {
+    if (!cpf) return '';
+    const cleaned = cpf.replace(/\D/g, '');
+    return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  };
+
+  const formatTelefone = (telefone: string) => {
+    if (!telefone) return '';
+    const cleaned = telefone.replace(/\D/g, '');
+    if (cleaned.length <= 10) {
+      return cleaned.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    }
+    return cleaned.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
   };
 
   if (loading) {
@@ -172,7 +187,7 @@ export default function ListagemPessoas() {
                     <Box display="flex" flexDirection="column" gap={1}>
                       <Box display="flex" alignItems="center" gap={1}>
                         <Chip 
-                          label={pessoa.cpf} 
+                          label={formatCpf(pessoa.cpf)} 
                           variant="outlined" 
                           size="small"
                           color="primary"
@@ -181,7 +196,7 @@ export default function ListagemPessoas() {
                           <Box display="flex" alignItems="center" gap={0.5}>
                             <Phone fontSize="small" color="action" />
                             <Typography variant="body2" color="textSecondary">
-                              {pessoa.telefone}
+                              {formatTelefone(pessoa.telefone)}
                             </Typography>
                           </Box>
                         )}
