@@ -1,17 +1,22 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import CadastroPessoa from './pages/CadastroPessoa';
 import ListagemPessoas from './pages/ListagemPessoas';
 import DownloadCsv from './pages/DownloadCsv';
 
 export default function App() {
-  const [page, setPage] = React.useState<'cadastro' | 'listagem' | 'download'>('cadastro');
-
   return (
-    <Layout onNavigate={setPage}>
-      {page === 'cadastro' && <CadastroPessoa/>}
-      {page === 'listagem' && <ListagemPessoas />}
-      {page === 'download' && <DownloadCsv />}
-    </Layout>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<CadastroPessoa />} />
+          <Route path="/cadastro-pessoa" element={<CadastroPessoa />} />
+          <Route path="/cadastro-pessoa/:id" element={<CadastroPessoa />} />
+          <Route path="/listagem-pessoas" element={<ListagemPessoas />} />
+          <Route path="/download-csv" element={<DownloadCsv />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EnderecoDTO {
 
+    private Long id;
     private String numero;
     private String complemento;
     private String cep;
@@ -18,6 +19,7 @@ public class EnderecoDTO {
     private String estado;
 
     public EnderecoDTO(Endereco endereco) {
+        this.id = endereco.getId();
         this.numero = endereco.getNumero();
         this.complemento = endereco.getComplemento();
         this.cep = endereco.getCep();
