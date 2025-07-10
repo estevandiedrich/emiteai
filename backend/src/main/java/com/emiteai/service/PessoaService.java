@@ -6,6 +6,7 @@ import com.emiteai.entities.Endereco;
 import com.emiteai.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    @Transactional
     public PessoaDTO cadastrarPessoa(PessoaDTO pessoaDTO) {
         if (pessoaRepository.existsByCpf(pessoaDTO.getCpf())) {
             throw new RuntimeException("CPF já cadastrado");
@@ -61,6 +63,7 @@ public class PessoaService {
         return new PessoaDTO(pessoa);
     }
 
+    @Transactional
     public PessoaDTO atualizarPessoa(Long id, PessoaDTO dto) {
         Pessoa pessoa = pessoaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));

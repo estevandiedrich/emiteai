@@ -21,7 +21,7 @@ public class Pessoa {
     @Column(unique = true)
     private String cpf;
 
-    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Endereco endereco;
 
 }

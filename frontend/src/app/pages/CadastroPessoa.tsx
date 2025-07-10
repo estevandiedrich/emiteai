@@ -93,7 +93,7 @@ export default function CadastroPessoa() {
     if (isValidCep(form.cep)) {
       buscarCep(form.cep);
     }
-  }, [form.cep]);
+  }, [form.cep]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Função para carregar dados da pessoa quando estiver editando
   const loadPessoa = async (pessoaId: string) => {
