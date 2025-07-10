@@ -1,6 +1,7 @@
 package com.emiteai.controller;
 
 import com.emiteai.dtos.PessoaDTO;
+import com.emiteai.service.AuditoriaService;
 import com.emiteai.service.PessoaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,9 @@ class PessoaControllerTest {
 
     @MockBean
     private PessoaService pessoaService;
+
+    @MockBean
+    private AuditoriaService auditoriaService; // Mock do serviço de auditoria
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.3'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.emiteai'
@@ -42,6 +43,113 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/Application.class',
+                '**/config/**',
+                '**/dtos/**',
+                '**/entities/**',
+                '**/*Config.class',
+                '**/*Application.class',
+                '**/*Exception.class',
+                '**/*Configuration.class',
+                '**/filter/**',
+                '**/interceptor/**'
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70
+            }
+        }
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+        }
+        rule {
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.60
+            }
+        }
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/Application.class',
+                '**/config/**',
+                '**/dtos/**',
+                '**/entities/**',
+                '**/*Config.class',
+                '**/*Application.class',
+                '**/*Exception.class',
+                '**/*Configuration.class',
+                '**/filter/**',
+                '**/interceptor/**'
+            ])
+        }))
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+// Task para executar testes e gerar relatório de coverage
+task testCoverage {
+    dependsOn test
+    dependsOn jacocoTestReport
+    description = 'Executa testes e gera relatório de coverage'
+    group = 'verification'
+}
+
+// Task para abrir o relatório HTML
+task openCoverageReport {
+    dependsOn jacocoTestReport
+    description = 'Abre o relatório de coverage no navegador'
+    group = 'verification'
+    doLast {
+        def reportFile = file("${buildDir}/reports/jacoco/test/html/index.html")
+        if (reportFile.exists()) {
+            if (System.getProperty('os.name').toLowerCase().contains('linux')) {
+                exec {
+                    commandLine 'xdg-open', reportFile.absolutePath
+                }
+            } else if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+                exec {
+                    commandLine 'cmd', '/c', 'start', reportFile.absolutePath
+                }
+            } else if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+                exec {
+                    commandLine 'open', reportFile.absolutePath
+                }
+            }
+            println "Relatório de coverage disponível em: ${reportFile.absolutePath}"
+        } else {
+            println "Relatório não encontrado. Execute './gradlew test jacocoTestReport' primeiro."
+        }
+    }
 }
 
 springBoot {

@@ -19,6 +19,7 @@ import {
   Box
 } from '@mui/material';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../../config/api';
 import { StyledContainer, StyledTitle, StyledCard } from '../components/StyledComponents';
 
 interface AuditoriaData {
@@ -57,11 +58,11 @@ export default function AuditoriaPage() {
       setError(null);
 
       // Carregar auditorias recentes
-      const auditoriaResponse = await axios.get(`/api/auditoria/recentes?horas=${horasFiltro}`);
+      const auditoriaResponse = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUDITORIA}/recentes?horas=${horasFiltro}`));
       setAuditorias(auditoriaResponse.data);
 
       // Carregar estatísticas
-      const estatisticasResponse = await axios.get(`/api/auditoria/estatisticas?horas=${horasFiltro}`);
+      const estatisticasResponse = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUDITORIA}/estatisticas?horas=${horasFiltro}`));
       setEstatisticas(estatisticasResponse.data);
 
     } catch (err) {
@@ -80,7 +81,7 @@ export default function AuditoriaPage() {
 
     try {
       setLoading(true);
-      const response = await axios.get(`/api/auditoria/endpoint?endpoint=${encodeURIComponent(filtroEndpoint)}`);
+      const response = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUDITORIA}/endpoint?endpoint=${encodeURIComponent(filtroEndpoint)}`));
       setAuditorias(response.data);
     } catch (err) {
       setError('Erro ao filtrar auditorias');

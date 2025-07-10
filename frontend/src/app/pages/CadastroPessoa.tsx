@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Box, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
-
-// Configuração da URL base do backend
-const API_BASE_URL = 'http://localhost:8080';
+import { buildApiUrl, API_CONFIG } from '../../config/api';
 
 export default function CadastroPessoa() {
   const [form, setForm] = useState({ nome: '', telefone: '', cpf: '', cep: '', numero: '', complemento: '' });
@@ -46,7 +44,7 @@ export default function CadastroPessoa() {
     
     try {
       const cleanCep = formatCep(cep);
-      const response = await axios.get(`${API_BASE_URL}/api/cep/${cleanCep}`);
+      const response = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.CEP}/${cleanCep}`));
       const data = response.data;
       
       // Mapear os campos corretamente
@@ -93,7 +91,7 @@ export default function CadastroPessoa() {
         }
       };
       
-      await axios.post(`${API_BASE_URL}/api/pessoas`, pessoaData);
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS), pessoaData);
       setSuccess(true);
       
       // Limpar formulário após sucesso

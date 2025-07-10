@@ -18,6 +18,8 @@ spring:
           revision_type_field_name: revtype
           store_data_at_delete: true
           default_schema: public
+          # Usar nossa entidade de revisão customizada
+          revision_entity: com.emiteai.entities.CustomRevisionEntity
 
   flyway:
     enabled: true
@@ -56,6 +58,8 @@ spring:
           revision_type_field_name: revtype
           store_data_at_delete: true
           default_schema: public
+          # Usar nossa entidade de revisão customizada
+          revision_entity: com.emiteai.entities.CustomRevisionEntity
 
   flyway:
     enabled: true
@@ -65,3 +69,12 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+# Configurações específicas para desenvolvimento
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "http://localhost:3000"
+        allowed-methods: "*"
+        allowed-headers: "*"

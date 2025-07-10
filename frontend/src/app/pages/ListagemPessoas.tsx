@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, List, ListItem, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
+import { buildApiUrl, API_CONFIG } from '../../config/api';
 
 export default function ListagemPessoas() {
   const [pessoas, setPessoas] = useState<any[]>([]);
@@ -8,7 +9,7 @@ export default function ListagemPessoas() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get('/api/pessoas')
+    axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS))
       .then(response => setPessoas(response.data))
       .catch(() => setError("Erro ao carregar pessoas"))
       .finally(() => setLoading(false));

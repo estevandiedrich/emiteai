@@ -1,5 +1,6 @@
 package com.emiteai.controller;
 
+import com.emiteai.service.AuditoriaService;
 import com.emiteai.service.CsvProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class RelatorioControllerTest {
 
     @MockBean
     private CsvProducer csvProducer;
+
+    @MockBean
+    private AuditoriaService auditoriaService; // Mock do serviço de auditoria
 
     @BeforeEach
     void setUp() {
