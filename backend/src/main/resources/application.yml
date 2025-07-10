@@ -1,5 +1,43 @@
 spring:
   datasource:
+    url: jdbc:postgresql://postgres:5432/emiteai
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        # Configurações do Hibernate Envers
+        envers:
+          audit_table_suffix: _aud
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+          default_schema: public
+
+  flyway:
+    enabled: true
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  datasource:
     url: jdbc:postgresql://localhost:5432/emiteai
     username: root
     password: root
@@ -9,6 +47,15 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    properties:
+      hibernate:
+        # Configurações do Hibernate Envers
+        envers:
+          audit_table_suffix: _aud
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+          default_schema: public
 
   flyway:
     enabled: true
@@ -18,6 +65,3 @@ spring:
     port: 5672
     username: guest
     password: guest
-
-server:
-  port: 8080
