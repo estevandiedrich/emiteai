@@ -2,12 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Box, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import { buildApiUrl, API_CONFIG } from '../../config/api';
+import { useParams, useNavigate } from 'react-router-dom';
+
+interface Endereco {
+  id?: number;
+  cep: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
+  municipio: string;
+  estado: string;
+}
+
+interface Pessoa {
+  id?: number;
+  nome: string;
+  telefone: string;
+  cpf: string;
+  endereco?: Endereco;
+}
 
 export default function CadastroPessoa() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const isEditing = !!id;
+  
   const [form, setForm] = useState({ nome: '', telefone: '', cpf: '', cep: '', numero: '', complemento: '' });
   const [endereco, setEndereco] = useState({ bairro: '', municipio: '', estado: '' });
   const [loading, setLoading] = useState(false);
   const [loadingCep, setLoadingCep] = useState(false);
+  const [loadingPessoa, setLoadingPessoa] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -71,6 +95,48 @@ export default function CadastroPessoa() {
     }
   }, [form.cep]);
 
+  // Função para carregar dados da pessoa quando estiver editando
+  const loadPessoa = async (pessoaId: string) => {
+    setLoadingPessoa(true);
+    setError(null);
+    
+    try {
+      const response = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.PESSOAS}/${pessoaId}`));
+      const pessoa: Pessoa = response.data;
+      
+      // Preencher o formulário com os dados da pessoa
+      setForm({
+        nome: pessoa.nome || '',
+        telefone: pessoa.telefone || '',
+        cpf: pessoa.cpf || '',
+        cep: pessoa.endereco?.cep ? pessoa.endereco.cep.replace(/(\d{5})(\d)/, '$1-$2') : '',
+        numero: pessoa.endereco?.numero || '',
+        complemento: pessoa.endereco?.complemento || ''
+      });
+      
+      // Preencher dados do endereço
+      if (pessoa.endereco) {
+        setEndereco({
+          bairro: pessoa.endereco.bairro || '',
+          municipio: pessoa.endereco.municipio || '',
+          estado: pessoa.endereco.estado || ''
+        });
+      }
+    } catch (err) {
+      console.error('Erro ao carregar pessoa:', err);
+      setError("Erro ao carregar dados da pessoa");
+    } finally {
+      setLoadingPessoa(false);
+    }
+  };
+
+  // Effect para carregar dados da pessoa quando estiver editando
+  useEffect(() => {
+    if (isEditing && id) {
+      loadPessoa(id);
+    }
+  }, [isEditing, id]);
+
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -91,15 +157,27 @@ export default function CadastroPessoa() {
         }
       };
       
-      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS), pessoaData);
-      setSuccess(true);
-      
-      // Limpar formulário após sucesso
-      setForm({ nome: '', telefone: '', cpf: '', cep: '', numero: '', complemento: '' });
-      setEndereco({ bairro: '', municipio: '', estado: '' });
+      if (isEditing && id) {
+        // Atualizar pessoa existente
+        await axios.put(buildApiUrl(`${API_CONFIG.ENDPOINTS.PESSOAS}/${id}`), pessoaData);
+        setSuccess(true);
+        
+        // Navegar de volta para a listagem após sucesso
+        setTimeout(() => {
+          navigate('/listagem-pessoas');
+        }, 2000);
+      } else {
+        // Criar nova pessoa
+        await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS), pessoaData);
+        setSuccess(true);
+        
+        // Limpar formulário após sucesso
+        setForm({ nome: '', telefone: '', cpf: '', cep: '', numero: '', complemento: '' });
+        setEndereco({ bairro: '', municipio: '', estado: '' });
+      }
     } catch (err) {
       console.error('Erro ao salvar pessoa:', err);
-      setError("Erro ao salvar pessoa");
+      setError(isEditing ? "Erro ao atualizar pessoa" : "Erro ao salvar pessoa");
     } finally {
       setLoading(false);
     }
@@ -107,10 +185,22 @@ export default function CadastroPessoa() {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom>Cadastro de Pessoa</Typography>
+      <Typography variant="h4" gutterBottom>
+        {isEditing ? 'Editar Pessoa' : 'Cadastro de Pessoa'}
+      </Typography>
+      
+      {loadingPessoa && (
+        <Box display="flex" justifyContent="center" mb={2}>
+          <CircularProgress />
+        </Box>
+      )}
       
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {success && <Alert severity="success" sx={{ mb: 2 }}>Pessoa cadastrada com sucesso!</Alert>}
+      {success && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {isEditing ? 'Pessoa atualizada com sucesso!' : 'Pessoa cadastrada com sucesso!'}
+        </Alert>
+      )}
 
       <Box display="flex" flexDirection="column" gap={2}>
         <TextField 
@@ -205,10 +295,14 @@ export default function CadastroPessoa() {
         <Button 
           variant="contained" 
           onClick={handleSubmit} 
-          disabled={loading || loadingCep}
+          disabled={loading || loadingCep || loadingPessoa}
           size="large"
         >
-          {loading ? <CircularProgress size={24} /> : "Salvar"}
+          {loading ? (
+            <CircularProgress size={24} />
+          ) : (
+            isEditing ? "Atualizar" : "Salvar"
+          )}
         </Button>
       </Box>
     </Container>

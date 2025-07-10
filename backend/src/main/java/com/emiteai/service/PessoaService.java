@@ -2,6 +2,7 @@ package com.emiteai.service;
 
 import com.emiteai.dtos.PessoaDTO;
 import com.emiteai.entities.Pessoa;
+import com.emiteai.entities.Endereco;
 import com.emiteai.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,20 @@ public class PessoaService {
         pessoa.setNome(pessoaDTO.getNome());
         pessoa.setTelefone(pessoaDTO.getTelefone());
         pessoa.setCpf(pessoaDTO.getCpf());
+        
+        // Criar endereço se fornecido
+        if (pessoaDTO.getEndereco() != null) {
+            Endereco endereco = new Endereco();
+            endereco.setCep(pessoaDTO.getEndereco().getCep());
+            endereco.setNumero(pessoaDTO.getEndereco().getNumero());
+            endereco.setComplemento(pessoaDTO.getEndereco().getComplemento());
+            endereco.setBairro(pessoaDTO.getEndereco().getBairro());
+            endereco.setMunicipio(pessoaDTO.getEndereco().getMunicipio());
+            endereco.setEstado(pessoaDTO.getEndereco().getEstado());
+            endereco.setPessoa(pessoa);
+            pessoa.setEndereco(endereco);
+        }
+        
         pessoaRepository.save(pessoa);
         return new PessoaDTO(pessoa);
     }
@@ -53,6 +68,23 @@ public class PessoaService {
         pessoa.setNome(dto.getNome());
         pessoa.setTelefone(dto.getTelefone());
         pessoa.setCpf(dto.getCpf());
+
+        // Atualizar endereço
+        if (dto.getEndereco() != null) {
+            Endereco endereco = pessoa.getEndereco();
+            if (endereco == null) {
+                endereco = new Endereco();
+                endereco.setPessoa(pessoa);
+                pessoa.setEndereco(endereco);
+            }
+            
+            endereco.setCep(dto.getEndereco().getCep());
+            endereco.setNumero(dto.getEndereco().getNumero());
+            endereco.setComplemento(dto.getEndereco().getComplemento());
+            endereco.setBairro(dto.getEndereco().getBairro());
+            endereco.setMunicipio(dto.getEndereco().getMunicipio());
+            endereco.setEstado(dto.getEndereco().getEstado());
+        }
 
         pessoaRepository.save(pessoa);
 
