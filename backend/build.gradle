@@ -31,7 +31,7 @@ dependencies {
     
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.flywaydb:flyway-database-postgresql:9.22.0'
     
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -139,21 +139,4 @@ task openCoverageReport {
                 }
             } else if (System.getProperty('os.name').toLowerCase().contains('windows')) {
                 exec {
-                    commandLine 'cmd', '/c', 'start', reportFile.absolutePath
-                }
-            } else if (System.getProperty('os.name').toLowerCase().contains('mac')) {
-                exec {
-                    commandLine 'open', reportFile.absolutePath
-                }
-            }
-            println "Relatório de coverage disponível em: ${reportFile.absolutePath}"
-        } else {
-            println "Relatório não encontrado. Execute './gradlew test jacocoTestReport' primeiro."
-        }
-    }
-}
-
-springBoot {
-    mainClass = 'com.emiteai.Application'
-}
-
+  

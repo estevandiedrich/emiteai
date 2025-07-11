@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@Profile("!dev") // Ativado para todos os profiles EXCETO dev
+@Profile("disabled") // Desabilitado - usando configuração no AuditoriaConfig
 public class CorsConfig implements WebMvcConfigurer {
 
     @Override
