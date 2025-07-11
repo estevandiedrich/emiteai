@@ -78,3 +78,52 @@ management:
         allowed-origins: "http://localhost:3000"
         allowed-methods: "*"
         allowed-headers: "*"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:postgresql://postgres:5432/emiteai
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        # Configurações do Hibernate Envers
+        envers:
+          audit_table_suffix: _aud
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+          default_schema: public
+          # Usar nossa entidade de revisão customizada
+          revision_entity: com.emiteai.entities.CustomRevisionEntity
+
+  flyway:
+    enabled: true
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8080
+
+# Configurações específicas para Docker
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "http://localhost:3000,http://127.0.0.1:3000"
+        allowed-methods: "*"
+        allowed-headers: "*"

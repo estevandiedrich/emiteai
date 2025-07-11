@@ -20,6 +20,8 @@ services:
     build: ./backend
     ports:
       - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - postgres
       - rabbitmq
@@ -28,3 +30,5 @@ services:
     build: ./frontend
     ports:
       - "3000:80"
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8080
