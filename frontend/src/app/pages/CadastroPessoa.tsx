@@ -205,9 +205,14 @@ export default function CadastroPessoa() {
         setForm({ nome: '', telefone: '', cpf: '', cep: '', numero: '', complemento: '' });
         setEndereco({ bairro: '', municipio: '', estado: '' });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Erro ao salvar pessoa:', err);
-      setError(isEditing ? "Erro ao atualizar pessoa" : "Erro ao salvar pessoa");
+      
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(isEditing ? "Erro ao atualizar pessoa" : "Erro ao salvar pessoa");
+      }
     } finally {
       setLoading(false);
     }

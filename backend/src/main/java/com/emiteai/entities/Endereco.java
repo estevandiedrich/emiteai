@@ -3,13 +3,12 @@ package com.emiteai.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-// TODO: Adicionar @Audited quando Envers estiver totalmente configurado
-// import org.hibernate.envers.Audited;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Getter
 @Setter
-// @Audited // Temporariamente comentado - será habilitado após configuração completa
+@Audited // ✅ Auditoria habilitada
 public class Endereco {
 
     @Id

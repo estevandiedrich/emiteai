@@ -26,7 +26,7 @@ public class PessoaService {
         pessoa.setNome(pessoaDTO.getNome());
         pessoa.setTelefone(pessoaDTO.getTelefone());
         pessoa.setCpf(pessoaDTO.getCpf());
-        
+
         // Criar endereço se fornecido
         if (pessoaDTO.getEndereco() != null) {
             Endereco endereco = new Endereco();
@@ -39,7 +39,7 @@ public class PessoaService {
             endereco.setPessoa(pessoa);
             pessoa.setEndereco(endereco);
         }
-        
+
         pessoaRepository.save(pessoa);
         return new PessoaDTO(pessoa);
     }
@@ -80,7 +80,7 @@ public class PessoaService {
                 endereco.setPessoa(pessoa);
                 pessoa.setEndereco(endereco);
             }
-            
+
             endereco.setCep(dto.getEndereco().getCep());
             endereco.setNumero(dto.getEndereco().getNumero());
             endereco.setComplemento(dto.getEndereco().getComplemento());
