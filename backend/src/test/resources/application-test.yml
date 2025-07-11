@@ -10,6 +10,16 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        # Configurações do Hibernate Envers para testes
+        envers:
+          audit_table_suffix: _aud
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+          # Usar nossa entidade de revisão customizada
+          revision_entity: com.emiteai.entities.CustomRevisionEntity
   
   flyway:
     enabled: false

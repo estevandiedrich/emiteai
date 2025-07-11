@@ -12,7 +12,7 @@ import org.hibernate.envers.RevisionTimestamp;
  * Resolve o problema da sequência padrão 'revinfo_seq' vs 'hibernate_sequence'
  */
 @Entity
-@RevisionEntity
+@RevisionEntity(CustomRevisionListener.class) // 🔧 Adicionar listener
 @Table(name = "revinfo")
 @Getter
 @Setter
@@ -28,6 +28,19 @@ public class CustomRevisionEntity {
     @RevisionTimestamp
     @Column(name = "revtstmp")
     private long timestamp;
+    
+    // 🔧 Campos opcionais para auditoria avançada
+    @Column(name = "usuario", length = 100)
+    private String usuario; // Usuário que fez a modificação
+    
+    @Column(name = "ip_origem", length = 45)
+    private String ipOrigem; // IP de onde veio a modificação
+    
+    @Column(name = "user_agent", length = 500)
+    private String userAgent; // Navegador/cliente
+    
+    @Column(name = "motivo", length = 500)
+    private String motivo; // Motivo da mudança (opcional)
     
     @Override
     public boolean equals(Object o) {
