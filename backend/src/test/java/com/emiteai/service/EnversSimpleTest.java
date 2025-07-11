@@ -46,8 +46,9 @@ class EnversSimpleTest {
         // Given - Criar uma pessoa
         Pessoa pessoa = new Pessoa();
         pessoa.setNome("João Silva");
-        // Usar CPF fixo válido
-        pessoa.setCpf("33344455566");
+        // Gerar CPF único simples
+        String cpfUnico = "111" + String.valueOf(System.currentTimeMillis() % 100000000);
+        pessoa.setCpf(cpfUnico);
         pessoa.setTelefone("11999999999");
         
         // When - Salvar a pessoa
