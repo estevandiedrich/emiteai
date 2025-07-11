@@ -6,9 +6,12 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: emiteai
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    command: ["postgres", "-c", "log_statement=all"]
 
   rabbitmq:
     image: rabbitmq:3-management

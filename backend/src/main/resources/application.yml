@@ -23,6 +23,10 @@ spring:
 
   flyway:
     enabled: true
+    create-schemas: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
 
   rabbitmq:
     host: rabbitmq
@@ -63,6 +67,10 @@ spring:
 
   flyway:
     enabled: true
+    create-schemas: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
 
   rabbitmq:
     host: localhost
@@ -109,6 +117,10 @@ spring:
 
   flyway:
     enabled: true
+    create-schemas: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
 
   rabbitmq:
     host: rabbitmq
