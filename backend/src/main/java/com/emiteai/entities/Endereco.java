@@ -8,7 +8,7 @@ import org.hibernate.envers.Audited;
 @Entity
 @Getter
 @Setter
-@Audited // ✅ Auditoria habilitada
+@Audited
 public class Endereco {
 
     @Id

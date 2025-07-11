@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auditoria")
+@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"})
 @Tag(name = "Auditoria", description = "APIs para consulta de logs de auditoria do sistema")
 public class AuditoriaController {
 
