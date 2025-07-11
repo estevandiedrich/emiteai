@@ -4,6 +4,7 @@ import com.emiteai.service.CsvProducer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +22,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/relatorios")
 @Tag(name = "Relatorio", description = "APIs de relatórios")
+@ConditionalOnProperty(name = "spring.rabbitmq.enabled", havingValue = "true", matchIfMissing = true)
 public class RelatorioController {
 
     @Autowired

@@ -6,6 +6,7 @@ import com.emiteai.repository.PessoaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@ConditionalOnProperty(name = "spring.rabbitmq.enabled", havingValue = "true", matchIfMissing = true)
 public class CsvConsumer {
 
     @Autowired

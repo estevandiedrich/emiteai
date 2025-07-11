@@ -31,7 +31,6 @@ dependencies {
     
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-database-postgresql:9.22.0'
     
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -133,10 +132,26 @@ task openCoverageReport {
     doLast {
         def reportFile = file("${buildDir}/reports/jacoco/test/html/index.html")
         if (reportFile.exists()) {
-            if (System.getProperty('os.name').toLowerCase().contains('linux')) {
+            def os = System.getProperty('os.name').toLowerCase()
+            if (os.contains('linux')) {
                 exec {
                     commandLine 'xdg-open', reportFile.absolutePath
                 }
-            } else if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+            } else if (os.contains('windows')) {
                 exec {
+                    commandLine 'cmd', '/c', 'start', reportFile.absolutePath
+                }
+            } else if (os.contains('mac')) {
+                exec {
+                    commandLine 'open', reportFile.absolutePath
+                }
+            } else {
+                println "Sistema operacional não suportado para abertura automática do relatório."
+                println "Abra manualmente: ${reportFile.absolutePath}"
+            }
+        } else {
+            println "Relatório não encontrado: ${reportFile.absolutePath}"
+        }
+    }
+}
   
