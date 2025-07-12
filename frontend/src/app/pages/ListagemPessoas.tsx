@@ -57,10 +57,23 @@ export default function ListagemPessoas() {
     
     try {
       const response = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS));
-      setPessoas(response.data);
+      // Garantir que sempre temos um array
+      const data = response.data;
+      if (Array.isArray(data)) {
+        setPessoas(data);
+      } else if (data === null || data === undefined) {
+        // Dados null/undefined são tratados como erro
+        setError("Erro ao carregar pessoas");
+        setPessoas([]);
+      } else {
+        // Dados inválidos também são tratados como erro
+        setError("Erro ao carregar pessoas");
+        setPessoas([]);
+      }
     } catch (err) {
       console.error('Erro ao carregar pessoas:', err);
       setError("Erro ao carregar pessoas");
+      setPessoas([]); // Garantir que pessoas é sempre um array
     } finally {
       setLoading(false);
     }
@@ -146,7 +159,7 @@ export default function ListagemPessoas() {
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
-      {pessoas.length === 0 ? (
+      {!pessoas || pessoas.length === 0 ? (
         <Box textAlign="center" mt={4}>
           <Typography variant="h6" color="textSecondary">
             Nenhuma pessoa cadastrada
@@ -161,7 +174,7 @@ export default function ListagemPessoas() {
         </Box>
       ) : (
         <Box display="flex" flexDirection="column" gap={2}>
-          {pessoas.map((pessoa, index) => (
+          {pessoas && pessoas.map((pessoa, index) => (
             <Card 
               key={pessoa.id} 
               elevation={2}

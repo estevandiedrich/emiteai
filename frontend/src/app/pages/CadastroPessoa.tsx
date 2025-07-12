@@ -172,6 +172,22 @@ export default function CadastroPessoa() {
     setError(null);
     setSuccess(false);
     
+    // Simular um pequeno delay para mostrar loading
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Validar campos obrigatórios
+    if (!form.nome.trim()) {
+      setError("Nome é obrigatório");
+      setLoading(false);
+      return;
+    }
+    
+    if (!form.cpf.trim()) {
+      setError("CPF é obrigatório");
+      setLoading(false);
+      return;
+    }
+    
     try {
       const pessoaData = {
         nome: form.nome,
@@ -211,7 +227,7 @@ export default function CadastroPessoa() {
       if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
-        setError(isEditing ? "Erro ao atualizar pessoa" : "Erro ao salvar pessoa");
+        setError("Erro ao salvar pessoa");
       }
     } finally {
       setLoading(false);

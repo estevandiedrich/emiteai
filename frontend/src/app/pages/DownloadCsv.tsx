@@ -15,11 +15,18 @@ export default function DownloadCsv() {
     setError(null);
 
     try {
-      const response = await axios.post(buildApiUrl(`${API_CONFIG.ENDPOINTS.RELATORIOS}/csv`));
-      setMessage(response.data);
+      const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RELATORIOS}/csv`), {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        setMessage("Relatório sendo gerado. Aguarde alguns instantes e tente baixar novamente.");
+      } else {
+        throw new Error('Erro ao gerar relatório');
+      }
       setTimeout(() => setGenerating(false), 2000); // Simula tempo de processamento
     } catch (err) {
-      setError("Erro ao solicitar geração do relatório");
+      setError("Erro ao gerar relatório. Tente novamente.");
       setGenerating(false);
     }
   };
@@ -27,25 +34,33 @@ export default function DownloadCsv() {
   const handleDownload = async () => {
     setLoading(true);
     setError(null);
+    setMessage(null);
 
     try {
-      // Verifica se o arquivo existe antes de tentar fazer download
-      const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RELATORIOS}/download`));
+      const downloadUrl = buildApiUrl(`${API_CONFIG.ENDPOINTS.RELATORIOS}/download`);
+      
+      // Verifica se o arquivo está disponível
+      const response = await fetch(downloadUrl, { method: 'HEAD' });
       
       if (response.status === 404) {
         setError("Arquivo não encontrado. Gere o relatório primeiro.");
-        setLoading(false);
+        return;
+      }
+
+      if (response.status === 500) {
+        setError("Erro no servidor. Tente novamente mais tarde.");
         return;
       }
 
       if (!response.ok) {
         throw new Error('Erro ao baixar arquivo');
       }
-
+      
       // Faz o download do arquivo
-      window.location.href = buildApiUrl(`${API_CONFIG.ENDPOINTS.RELATORIOS}/download`);
+      window.location.href = downloadUrl;
+      
     } catch (err) {
-      setError("Erro ao baixar o arquivo CSV");
+      setError("Erro ao baixar relatório. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -58,7 +73,7 @@ export default function DownloadCsv() {
       </Typography>
       
       <Typography variant="body1" gutterBottom sx={{ mb: 3 }}>
-        Gere e baixe um relatório CSV com todas as pessoas cadastradas.
+        Este relatório contém todas as pessoas cadastradas no formato CSV, compatível com Excel.
       </Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
