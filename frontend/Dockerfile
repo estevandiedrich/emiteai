@@ -4,11 +4,11 @@ WORKDIR /app
 
 # Copy package files first for better caching
 COPY package*.json ./
-RUN npm ci --production=false
+RUN npm ci --production=false --no-audit --no-fund --prefer-offline
 
 # Copy source code and build
 COPY . .
-RUN npm run build
+RUN npm run build && npm cache clean --force
 
 # Production stage
 FROM nginx:1.25-alpine
