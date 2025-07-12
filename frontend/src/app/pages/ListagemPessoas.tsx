@@ -57,23 +57,19 @@ export default function ListagemPessoas() {
     
     try {
       const response = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS));
-      // Garantir que sempre temos um array
       const data = response.data;
       if (Array.isArray(data)) {
         setPessoas(data);
       } else if (data === null || data === undefined) {
-        // Dados null/undefined são tratados como erro
         setError("Erro ao carregar pessoas");
         setPessoas([]);
       } else {
-        // Dados inválidos também são tratados como erro
         setError("Erro ao carregar pessoas");
         setPessoas([]);
       }
     } catch (err) {
-      console.error('Erro ao carregar pessoas:', err);
       setError("Erro ao carregar pessoas");
-      setPessoas([]); // Garantir que pessoas é sempre um array
+      setPessoas([]);
     } finally {
       setLoading(false);
     }
@@ -84,7 +80,6 @@ export default function ListagemPessoas() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = (pessoa: Pessoa) => {
-    // Navegar para a página de cadastro com o ID da pessoa para edição
     navigate(`/cadastro-pessoa/${pessoa.id}`);
   };
 
@@ -105,13 +100,10 @@ export default function ListagemPessoas() {
       setDeleteDialogOpen(false);
       setPessoaToDelete(null);
       
-      // Recarregar a lista
       await loadPessoas();
       
-      // Limpar mensagem de sucesso após 5 segundos
       setTimeout(() => setSuccess(null), 5000);
     } catch (err) {
-      console.error('Erro ao excluir pessoa:', err);
       setError("Erro ao excluir pessoa");
     } finally {
       setDeleting(false);

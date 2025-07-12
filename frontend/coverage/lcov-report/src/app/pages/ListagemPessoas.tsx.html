@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.64% </span>
+                <span class="strong">61.97% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/73</span>
+                <span class='fraction'>44/71</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.21% </span>
+                <span class="strong">65.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>45/69</span>
+                <span class='fraction'>44/67</span>
             </div>
         
             
@@ -359,15 +359,7 @@
 <a name='L294'></a><a href='#L294'>294</a>
 <a name='L295'></a><a href='#L295'>295</a>
 <a name='L296'></a><a href='#L296'>296</a>
-<a name='L297'></a><a href='#L297'>297</a>
-<a name='L298'></a><a href='#L298'>298</a>
-<a name='L299'></a><a href='#L299'>299</a>
-<a name='L300'></a><a href='#L300'>300</a>
-<a name='L301'></a><a href='#L301'>301</a>
-<a name='L302'></a><a href='#L302'>302</a>
-<a name='L303'></a><a href='#L303'>303</a>
-<a name='L304'></a><a href='#L304'>304</a>
-<a name='L305'></a><a href='#L305'>305</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L297'></a><a href='#L297'>297</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -426,21 +418,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -453,7 +441,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">33x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -474,13 +461,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -730,23 +714,19 @@ export default function ListagemPessoas() {
     
     try {
       const response = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS));
-      // Garantir que sempre temos um array
       const data = response.data;
       if (Array.isArray(data)) {
         setPessoas(data);
       } else if (data === null || data === undefined) {
-        // Dados null/undefined são tratados como erro
         setError("Erro ao carregar pessoas");
         setPessoas([]);
       } else {
-        // Dados inválidos também são tratados como erro
         setError("Erro ao carregar pessoas");
         setPessoas([]);
       }
     } catch (err) {
-      console.error('Erro ao carregar pessoas:', err);
       setError("Erro ao carregar pessoas");
-      setPessoas([]); // Garantir que pessoas é sempre um array
+      setPessoas([]);
     } finally {
       setLoading(false);
     }
@@ -757,7 +737,6 @@ export default function ListagemPessoas() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 &nbsp;
   const handleEdit = <span class="fstat-no" title="function not covered" >(p</span>essoa: Pessoa) =&gt; {
-    // Navegar para a página de cadastro com o ID da pessoa para edição
 <span class="cstat-no" title="statement not covered" >    navigate(`/cadastro-pessoa/${pessoa.id}`);</span>
   };
 &nbsp;
@@ -778,13 +757,10 @@ export default function ListagemPessoas() {
 <span class="cstat-no" title="statement not covered" >      setDeleteDialogOpen(false);</span>
 <span class="cstat-no" title="statement not covered" >      setPessoaToDelete(null);</span>
       
-      // Recarregar a lista
 <span class="cstat-no" title="statement not covered" >      await loadPessoas();</span>
       
-      // Limpar mensagem de sucesso após 5 segundos
 <span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >setSuccess(null),</span> 5000);</span>
     } catch (err) {
-<span class="cstat-no" title="statement not covered" >      console.error('Erro ao excluir pessoa:', err);</span>
 <span class="cstat-no" title="statement not covered" >      setError("Erro ao excluir pessoa");</span>
     } finally {
 <span class="cstat-no" title="statement not covered" >      setDeleting(false);</span>
@@ -982,7 +958,7 @@ export default function ListagemPessoas() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-12T19:39:31.829Z
+                at 2025-07-12T20:31:30.278Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

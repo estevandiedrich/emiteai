@@ -57,17 +57,14 @@ export default function AuditoriaPage() {
       setLoading(true);
       setError(null);
 
-      // Carregar auditorias recentes
       const auditoriaResponse = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUDITORIA}/recentes?horas=${horasFiltro}`));
       setAuditorias(auditoriaResponse.data);
 
-      // Carregar estatísticas
       const estatisticasResponse = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.AUDITORIA}/estatisticas?horas=${horasFiltro}`));
       setEstatisticas(estatisticasResponse.data);
 
     } catch (err) {
       setError('Erro ao carregar dados de auditoria');
-      console.error('Erro:', err);
     } finally {
       setLoading(false);
     }

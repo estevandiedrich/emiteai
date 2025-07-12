@@ -35,7 +35,6 @@ export default function CadastroPessoa() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Função para limpar caracteres não numéricos do CEP
   const formatCep = (cep: string) => {
     return cep.replace(/\D/g, '');
   };
@@ -73,7 +72,6 @@ export default function CadastroPessoa() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
-    // Aplicar formatação baseada no campo
     if (name === 'cep') {
       const formattedCep = value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2');
       setForm({ ...form, [name]: formattedCep });
@@ -101,7 +99,6 @@ export default function CadastroPessoa() {
       const response = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.CEP}/${cleanCep}`));
       const data = response.data;
       
-      // Mapear os campos corretamente
       setEndereco({
         bairro: data.bairro || '',
         municipio: data.localidade || data.municipio || '',
@@ -110,7 +107,6 @@ export default function CadastroPessoa() {
       
       setError(null);
     } catch (err) {
-      console.error('Erro ao buscar CEP:', err);
       setError("CEP não encontrado ou inválido");
       setEndereco({ bairro: '', municipio: '', estado: '' });
     } finally {
@@ -118,14 +114,12 @@ export default function CadastroPessoa() {
     }
   };
 
-  // Effect para buscar CEP automaticamente quando estiver completo
   useEffect(() => {
     if (isValidCep(form.cep)) {
       buscarCep(form.cep);
     }
   }, [form.cep]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Função para carregar dados da pessoa quando estiver editando
   const loadPessoa = async (pessoaId: string) => {
     setLoadingPessoa(true);
     setError(null);
@@ -134,7 +128,6 @@ export default function CadastroPessoa() {
       const response = await axios.get(buildApiUrl(`${API_CONFIG.ENDPOINTS.PESSOAS}/${pessoaId}`));
       const pessoa: Pessoa = response.data;
       
-      // Preencher o formulário com os dados da pessoa
       setForm({
         nome: pessoa.nome || '',
         telefone: pessoa.telefone ? formatTelefone(pessoa.telefone) : '',
@@ -144,7 +137,6 @@ export default function CadastroPessoa() {
         complemento: pessoa.endereco?.complemento || ''
       });
       
-      // Preencher dados do endereço
       if (pessoa.endereco) {
         setEndereco({
           bairro: pessoa.endereco.bairro || '',
@@ -153,14 +145,12 @@ export default function CadastroPessoa() {
         });
       }
     } catch (err) {
-      console.error('Erro ao carregar pessoa:', err);
       setError("Erro ao carregar dados da pessoa");
     } finally {
       setLoadingPessoa(false);
     }
   };
 
-  // Effect para carregar dados da pessoa quando estiver editando
   useEffect(() => {
     if (isEditing && id) {
       loadPessoa(id);
@@ -172,10 +162,8 @@ export default function CadastroPessoa() {
     setError(null);
     setSuccess(false);
     
-    // Simular um pequeno delay para mostrar loading
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // Validar campos obrigatórios
     if (!form.nome.trim()) {
       setError("Nome é obrigatório");
       setLoading(false);
@@ -191,8 +179,8 @@ export default function CadastroPessoa() {
     try {
       const pessoaData = {
         nome: form.nome,
-        telefone: form.telefone.replace(/\D/g, ''), // Remove formatação do telefone
-        cpf: form.cpf.replace(/\D/g, ''), // Remove formatação do CPF
+        telefone: form.telefone.replace(/\D/g, ''),
+        cpf: form.cpf.replace(/\D/g, ''),
         endereco: {
           cep: formatCep(form.cep),
           numero: form.numero,
@@ -204,26 +192,20 @@ export default function CadastroPessoa() {
       };
       
       if (isEditing && id) {
-        // Atualizar pessoa existente
         await axios.put(buildApiUrl(`${API_CONFIG.ENDPOINTS.PESSOAS}/${id}`), pessoaData);
         setSuccess(true);
         
-        // Navegar de volta para a listagem após sucesso
         setTimeout(() => {
           navigate('/listagem-pessoas');
         }, 2000);
       } else {
-        // Criar nova pessoa
         await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.PESSOAS), pessoaData);
         setSuccess(true);
         
-        // Limpar formulário após sucesso
         setForm({ nome: '', telefone: '', cpf: '', cep: '', numero: '', complemento: '' });
         setEndereco({ bairro: '', municipio: '', estado: '' });
       }
     } catch (err: any) {
-      console.error('Erro ao salvar pessoa:', err);
-      
       if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {

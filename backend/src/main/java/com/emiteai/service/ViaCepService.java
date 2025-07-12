@@ -37,7 +37,6 @@ public class ViaCepService {
             enderecoDTO.setComplemento((String) response.get("complemento"));
             enderecoDTO.setBairro((String) response.get("bairro"));
             
-            // Teste hardcoded para verificar se o problema está aqui
             String localidade = (String) response.get("localidade");
             String uf = (String) response.get("uf");
             
