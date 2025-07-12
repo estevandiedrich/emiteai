@@ -2,6 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import App from '../app/App';
 
+// Mock react-router-dom
+jest.mock('react-router-dom');
+
 // Mock dos componentes de páginas
 jest.mock('../app/pages/CadastroPessoa', () => {
   return function CadastroPessoa() {
@@ -30,45 +33,48 @@ const MockedApp = () => (
 );
 
 describe('App Component', () => {
-  test('renders app with layout and default cadastro page', () => {
+  test('renders app with layout and navigation', () => {
     render(<MockedApp />);
 
     expect(screen.getByText('Emiteaí - Cadastro de Pessoas')).toBeInTheDocument();
-    expect(screen.getByTestId('cadastro-page')).toBeInTheDocument();
-    expect(screen.queryByTestId('listagem-page')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('download-page')).not.toBeInTheDocument();
+    expect(screen.getByText('Cadastro')).toBeInTheDocument();
+    expect(screen.getByText('Listagem')).toBeInTheDocument();
+    expect(screen.getByText('Download CSV')).toBeInTheDocument();
   });
 
-  test('navigates to listagem page when listagem button is clicked', () => {
+  test('navigation links have correct hrefs', () => {
     render(<MockedApp />);
 
-    fireEvent.click(screen.getByText('Listagem'));
+    const cadastroLink = screen.getByText('Cadastro').closest('a');
+    const listagemLink = screen.getByText('Listagem').closest('a');
+    const downloadLink = screen.getByText('Download CSV').closest('a');
 
-    expect(screen.queryByTestId('cadastro-page')).not.toBeInTheDocument();
-    expect(screen.getByTestId('listagem-page')).toBeInTheDocument();
-    expect(screen.queryByTestId('download-page')).not.toBeInTheDocument();
+    expect(cadastroLink).toHaveAttribute('href', '/cadastro-pessoa');
+    expect(listagemLink).toHaveAttribute('href', '/listagem-pessoas');
+    expect(downloadLink).toHaveAttribute('href', '/download-csv');
   });
 
-  test('navigates to download page when download button is clicked', () => {
+  test('renders router structure', () => {
     render(<MockedApp />);
 
-    fireEvent.click(screen.getByText('Download CSV'));
-
-    expect(screen.queryByTestId('cadastro-page')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('listagem-page')).not.toBeInTheDocument();
-    expect(screen.getByTestId('download-page')).toBeInTheDocument();
+    expect(screen.getByTestId('browser-router')).toBeInTheDocument();
+    expect(screen.getByTestId('routes')).toBeInTheDocument();
+    
+    // Router should contain route definitions
+    const routes = screen.getAllByTestId('route');
+    expect(routes).toHaveLength(5); // Index, cadastro, listagem, download, edit routes
   });
 
-  test('navigates back to cadastro page when cadastro button is clicked', () => {
+  test('app layout structure is correct', () => {
     render(<MockedApp />);
 
-    // Navigate to another page first
-    fireEvent.click(screen.getByText('Listagem'));
-    expect(screen.getByTestId('listagem-page')).toBeInTheDocument();
-
-    // Navigate back to cadastro
-    fireEvent.click(screen.getByText('Cadastro'));
-    expect(screen.getByTestId('cadastro-page')).toBeInTheDocument();
-    expect(screen.queryByTestId('listagem-page')).not.toBeInTheDocument();
+    // Should have the main container
+    expect(screen.getByText('Emiteaí - Cadastro de Pessoas')).toBeInTheDocument();
+    
+    // Should have navigation structure
+    expect(screen.getByTestId('browser-router')).toBeInTheDocument();
+    
+    // Router structure should be present
+    expect(screen.getByTestId('routes')).toBeInTheDocument();
   });
 });

@@ -2,24 +2,21 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Layout from '../app/components/Layout';
 
+// Mock react-router-dom
+jest.mock('react-router-dom');
+
 const theme = createTheme();
 
-const MockedLayout = ({ children, onNavigate }: { children: React.ReactNode, onNavigate: jest.Mock }) => (
+const MockedLayout = ({ children }: { children: React.ReactNode }) => (
   <ThemeProvider theme={theme}>
-    <Layout onNavigate={onNavigate}>{children}</Layout>
+    <Layout>{children}</Layout>
   </ThemeProvider>
 );
 
 describe('Layout Component', () => {
-  let mockOnNavigate: jest.Mock;
-
-  beforeEach(() => {
-    mockOnNavigate = jest.fn();
-  });
-
   test('renders layout with title', () => {
     render(
-      <MockedLayout onNavigate={mockOnNavigate}>
+      <MockedLayout>
         <div>Test Content</div>
       </MockedLayout>
     );
@@ -30,7 +27,7 @@ describe('Layout Component', () => {
 
   test('renders navigation buttons', () => {
     render(
-      <MockedLayout onNavigate={mockOnNavigate}>
+      <MockedLayout>
         <div>Test Content</div>
       </MockedLayout>
     );
@@ -40,36 +37,30 @@ describe('Layout Component', () => {
     expect(screen.getByText('Download CSV')).toBeInTheDocument();
   });
 
-  test('calls onNavigate when cadastro button is clicked', () => {
+  test('navigation buttons have correct links', () => {
     render(
-      <MockedLayout onNavigate={mockOnNavigate}>
+      <MockedLayout>
         <div>Test Content</div>
       </MockedLayout>
     );
 
-    fireEvent.click(screen.getByText('Cadastro'));
-    expect(mockOnNavigate).toHaveBeenCalledWith('cadastro');
+    const cadastroButton = screen.getByText('Cadastro').closest('a');
+    const listagemButton = screen.getByText('Listagem').closest('a');
+    const downloadButton = screen.getByText('Download CSV').closest('a');
+
+    expect(cadastroButton).toHaveAttribute('href', '/cadastro-pessoa');
+    expect(listagemButton).toHaveAttribute('href', '/listagem-pessoas');
+    expect(downloadButton).toHaveAttribute('href', '/download-csv');
   });
 
-  test('calls onNavigate when listagem button is clicked', () => {
+  test('renders children content', () => {
+    const testContent = 'This is test content';
     render(
-      <MockedLayout onNavigate={mockOnNavigate}>
-        <div>Test Content</div>
+      <MockedLayout>
+        <div>{testContent}</div>
       </MockedLayout>
     );
 
-    fireEvent.click(screen.getByText('Listagem'));
-    expect(mockOnNavigate).toHaveBeenCalledWith('listagem');
-  });
-
-  test('calls onNavigate when download button is clicked', () => {
-    render(
-      <MockedLayout onNavigate={mockOnNavigate}>
-        <div>Test Content</div>
-      </MockedLayout>
-    );
-
-    fireEvent.click(screen.getByText('Download CSV'));
-    expect(mockOnNavigate).toHaveBeenCalledWith('download');
+    expect(screen.getByText(testContent)).toBeInTheDocument();
   });
 });

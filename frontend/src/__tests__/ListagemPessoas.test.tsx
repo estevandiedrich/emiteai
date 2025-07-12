@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
@@ -6,6 +7,24 @@ import ListagemPessoas from '../app/pages/ListagemPessoas';
 // Mock do axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+// Mock do react-router-dom
+jest.mock('react-router-dom', () => ({
+  useNavigate: jest.fn(() => jest.fn()),
+  useLocation: jest.fn(() => ({
+    pathname: '/',
+    search: '',
+    hash: '',
+    state: null
+  })),
+  useParams: jest.fn(() => ({})),
+  BrowserRouter: ({ children }: { children: any }) => children,
+  Router: ({ children }: { children: any }) => children,
+  Routes: ({ children }: { children: any }) => children,
+  Route: ({ children }: { children?: any }) => children || null,
+  Link: ({ children, to }: { children: any; to: string }) => children,
+  NavLink: ({ children, to }: { children: any; to: string }) => children
+}));
 
 const theme = createTheme();
 
@@ -45,12 +64,15 @@ describe('ListagemPessoas Component', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('João Silva - 12345678901')).toBeInTheDocument();
-      expect(screen.getByText('Maria Santos - 98765432100')).toBeInTheDocument();
-      expect(screen.getByText('Pedro Oliveira - 11122233344')).toBeInTheDocument();
+      expect(screen.getByText('João Silva')).toBeInTheDocument();
+      expect(screen.getByText('123.456.789-01')).toBeInTheDocument();
+      expect(screen.getByText('Maria Santos')).toBeInTheDocument();
+      expect(screen.getByText('987.654.321-00')).toBeInTheDocument();
+      expect(screen.getByText('Pedro Oliveira')).toBeInTheDocument();
+      expect(screen.getByText('111.222.333-44')).toBeInTheDocument();
     });
 
-    expect(mockedAxios.get).toHaveBeenCalledWith('/api/pessoas');
+    expect(mockedAxios.get).toHaveBeenCalledWith('http://localhost:8080/api/pessoas');
   });
 
   test('renders empty list when no pessoas are returned', async () => {
@@ -76,9 +98,10 @@ describe('ListagemPessoas Component', () => {
       expect(screen.getByText('Erro ao carregar pessoas')).toBeInTheDocument();
     });
 
-    // Should not show loading or the title
+    // Should not show loading
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    expect(screen.queryByText('Pessoas Cadastradas')).not.toBeInTheDocument();
+    // But title should still be visible
+    expect(screen.getByText('Pessoas Cadastradas')).toBeInTheDocument();
   });
 
   test('calls API with correct endpoint', async () => {
@@ -87,7 +110,7 @@ describe('ListagemPessoas Component', () => {
     render(<MockedListagemPessoas />);
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith('/api/pessoas');
+      expect(mockedAxios.get).toHaveBeenCalledWith('http://localhost:8080/api/pessoas');
       expect(mockedAxios.get).toHaveBeenCalledTimes(1);
     });
   });
