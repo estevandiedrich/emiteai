@@ -32,31 +32,25 @@ class RelatorioControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Limpar qualquer configuração anterior se necessário
     }
 
     @Test
     void testGerarCsv_DeveRetornarAccepted() throws Exception {
-        // Given
         doNothing().when(csvProducer).enviarMensagem("Gerar CSV");
 
-        // When & Then
         mockMvc.perform(post("/api/relatorios/csv")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string("Relatório CSV sendo gerado"));
 
-        // Verify
         verify(csvProducer, times(1)).enviarMensagem("Gerar CSV");
     }
 
     @Test
     void testGerarCsv_ComExcecaoNoProducer() throws Exception {
-        // Given
         doThrow(new RuntimeException("Erro ao enviar mensagem"))
                 .when(csvProducer).enviarMensagem("Gerar CSV");
 
-        // When & Then - GlobalExceptionHandler converts RuntimeException to 400 Bad Request
         mockMvc.perform(post("/api/relatorios/csv")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -64,12 +58,10 @@ class RelatorioControllerTest {
 
     @Test
     void testDownloadCsv_ArquivoExiste_DeveRetornarArquivo() throws Exception {
-        // Given - Criar arquivo temporário para teste
         File tempFile = new File("/tmp/pessoas.csv");
         createTestCsvFile(tempFile);
 
         try {
-            // When & Then
             mockMvc.perform(get("/api/relatorios/download"))
                     .andExpect(status().isOk())
                     .andExpect(header().string("Content-Disposition", "attachment; filename=pessoas.csv"))

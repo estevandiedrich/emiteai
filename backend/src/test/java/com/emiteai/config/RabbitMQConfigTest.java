@@ -9,13 +9,10 @@ class RabbitMQConfigTest {
 
     @Test
     void testQueueCreation() {
-        // Given
         RabbitMQConfig config = new RabbitMQConfig();
 
-        // When
         Queue queue = config.queue();
 
-        // Then
         assertNotNull(queue);
         assertEquals(RabbitMQConfig.QUEUE_NAME, queue.getName());
         assertEquals("csv_generation_queue", queue.getName());
@@ -23,7 +20,6 @@ class RabbitMQConfigTest {
 
     @Test
     void testQueueName() {
-        // When & Then
         assertEquals("csv_generation_queue", RabbitMQConfig.QUEUE_NAME);
     }
 }

@@ -30,14 +30,11 @@ class EnversFunctionalTest {
 
     @Test
     void testEnversBasicFunctionality() {
-        // Given - Criar uma pessoa com endereço
         Pessoa pessoa = new Pessoa();
         pessoa.setNome("João Silva");
-        // Usar CPF fixo válido
         pessoa.setCpf("11122233344");
         pessoa.setTelefone("11999999999");
         
-        // Criar endereço
         Endereco endereco = new Endereco();
         endereco.setCep("01234567");
         endereco.setNumero("123");
@@ -47,27 +44,21 @@ class EnversFunctionalTest {
         endereco.setPessoa(pessoa);
         pessoa.setEndereco(endereco);
         
-        // When - Salvar a pessoa
         Pessoa savedPessoa = pessoaRepository.save(pessoa);
         
-        // Flush para garantir que foi salvo
         entityManager.flush();
         
-        // Then - Verificar se a pessoa foi salva
         assertNotNull(savedPessoa);
         assertNotNull(savedPessoa.getId());
         
-        // Verificar se o Envers está capturando as mudanças
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
         List<Number> revisoes = auditReader.getRevisions(Pessoa.class, savedPessoa.getId());
         
         assertNotNull(revisoes);
         System.out.println("✅ Revisões encontradas: " + revisoes.size());
         
-        // Relaxar asserção - pode não ter revisões em ambiente de teste
         assertTrue(revisoes.size() >= 0, "Deve retornar lista válida");
         
-        // Testar busca de pessoa em revisão específica
         if (!revisoes.isEmpty()) {
             Number primeiraRevisao = revisoes.get(0);
             Pessoa pessoaNaRevisao = auditReader.find(Pessoa.class, savedPessoa.getId(), primeiraRevisao);
@@ -82,33 +73,27 @@ class EnversFunctionalTest {
 
     @Test
     void testEnversWithModification() {
-        // Given - Criar uma pessoa
         Pessoa pessoa = new Pessoa();
         pessoa.setNome("Maria Santos");
         pessoa.setCpf("22233344455");
         pessoa.setTelefone("11888888888");
         
-        // When - Salvar a pessoa
         Pessoa savedPessoa = pessoaRepository.save(pessoa);
         entityManager.flush();
         
-        // Modificar a pessoa
         savedPessoa.setNome("Maria Santos Silva");
         savedPessoa.setTelefone("11777777777");
-        pessoaRepository.save(savedPessoa); // Salvar as modificações
+        pessoaRepository.save(savedPessoa);
         entityManager.flush();
         
-        // Then - Verificar revisões
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
         List<Number> revisoes = auditReader.getRevisions(Pessoa.class, savedPessoa.getId());
         
         assertNotNull(revisoes);
         System.out.println("✅ Revisões após modificação: " + revisoes.size());
         
-        // Relaxar asserção - pode não ter revisões em ambiente de teste
         assertTrue(revisoes.size() >= 0, "Deve retornar lista válida");
         
-        // Verificar se as revisões capturaram os dados corretos
         if (revisoes.size() >= 2) {
             Number primeiraRevisao = revisoes.get(0);
             Number segundaRevisao = revisoes.get(1);

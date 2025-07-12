@@ -28,7 +28,6 @@ class ViaCepServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Mock the RestTemplate in ViaCepService
         viaCepService = new ViaCepService() {
             private final RestTemplate mockRestTemplate = restTemplate;
             
@@ -48,7 +47,6 @@ class ViaCepServiceTest {
 
     @Test
     void testBuscarEnderecoPorCep_Success() {
-        // Given
         String cep = "01234567";
         String expectedUrl = "https://viacep.com.br/ws/" + cep + "/json/";
         

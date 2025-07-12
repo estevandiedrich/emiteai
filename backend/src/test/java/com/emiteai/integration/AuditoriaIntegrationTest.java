@@ -74,7 +74,6 @@ public class AuditoriaIntegrationTest {
 
     @Test
     void testAuditoriaServiceDirectly() {
-        // Test the service layer directly
         Long count = auditoriaService.contarRequisicoesUltimasHoras(24);
         assertNotNull(count);
         assertTrue(count >= 0);
@@ -85,7 +84,6 @@ public class AuditoriaIntegrationTest {
 
     @Test
     void testAuditoriaRepositoryBasicOperations() {
-        // Create a test audit record
         Auditoria auditoria = new Auditoria();
         auditoria.setTimestampRequisicao(LocalDateTime.now());
         auditoria.setMetodoHttp("GET");
@@ -94,11 +92,9 @@ public class AuditoriaIntegrationTest {
         auditoria.setStatusResposta(200);
         auditoria.setTempoProcessamento(100L);
 
-        // Save and verify
         Auditoria saved = auditoriaRepository.save(auditoria);
         assertNotNull(saved.getId());
 
-        // Test queries
         LocalDateTime since = LocalDateTime.now().minusHours(1);
         List<Auditoria> recent = auditoriaRepository.findRecentAudits(since);
         assertNotNull(recent);

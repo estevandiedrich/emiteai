@@ -19,13 +19,10 @@ class EntityManagerTest {
 
     @Test
     void testEntityManagerInjection() {
-        // Verificar se o EntityManager foi injetado corretamente
         assertNotNull(entityManager, "EntityManager should be injected");
         System.out.println("✅ EntityManager foi injetado com sucesso!");
         
-        // Verificar se conseguimos acessar o Envers
         try {
-            // Tentar importar e usar as classes do Envers
             Class.forName("org.hibernate.envers.AuditReaderFactory");
             Class.forName("org.hibernate.envers.AuditReader");
             System.out.println("✅ Classes do Envers estão disponíveis!");
